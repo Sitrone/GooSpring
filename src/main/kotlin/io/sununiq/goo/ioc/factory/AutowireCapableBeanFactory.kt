@@ -1,8 +1,9 @@
 package io.sununiq.goo.ioc.factory
 
 import io.sununiq.goo.ioc.domain.BeanDefinition
+import io.sununiq.goo.ioc.domain.BeanReference
 
-class AutowireCapableBeanFactory : AbstractBeanFactory() {
+open class AutowireCapableBeanFactory : AbstractBeanFactory() {
 
     override fun doCreateBean(beanDefinition: BeanDefinition): Any {
         val bean = createBeanInstance(beanDefinition)
@@ -16,7 +17,12 @@ class AutowireCapableBeanFactory : AbstractBeanFactory() {
         beanDefinition.propertyValues.propertyValues.forEach {
             val declaredField = bean::javaClass.get().getDeclaredField(it.name)
             declaredField.isAccessible = true
-            declaredField.set(bean, it.value)
+
+            var value = it.value
+            if (value is BeanReference) {
+                value = getBean(value.name)!!
+            }
+            declaredField.set(bean, value)
         }
     }
 

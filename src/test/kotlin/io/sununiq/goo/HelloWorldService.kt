@@ -3,7 +3,10 @@ package io.sununiq.goo
 class HelloWorldService {
     var text: String? = null
 
+    var outputService: OutputService? = null
+
     fun helloWorld(): Unit {
-        println(text)
+        outputService!!.output(text!!)
     }
+
 }

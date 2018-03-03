@@ -16,5 +16,5 @@ class PropertyValues {
     fun addPropertyValue(propertyValue: PropertyValue) = propertyValues.add(propertyValue)
 }
 
-data class PropertyValue(val name: String, val value: String)
+data class PropertyValue(val name: String, val value: Any)
 

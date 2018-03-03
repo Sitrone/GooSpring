@@ -4,7 +4,10 @@ import io.sununiq.goo.ioc.domain.BeanDefinition
 import io.sununiq.goo.ioc.domain.PropertyValue
 import io.sununiq.goo.ioc.domain.PropertyValues
 import io.sununiq.goo.ioc.factory.AutowireCapableBeanFactory
+import io.sununiq.goo.ioc.io.ResourceLoader
+import io.sununiq.goo.ioc.xml.XmlBeanDefinitionReader
 import org.junit.Test
+
 
 class BeanFactoryTest {
 
@@ -23,6 +26,20 @@ class BeanFactoryTest {
         beanFactory.registerBeanDefinition(name, beanDefinition)
 
         val helloWorldService = beanFactory.getBean(name) as HelloWorldService
+        helloWorldService.helloWorld()
+    }
+
+    @Test
+    fun testBeanFactoryWithXml() {
+        val xmlBeanDefinitionReader = XmlBeanDefinitionReader(ResourceLoader())
+        xmlBeanDefinitionReader.loadBeanDefinitions("tinyioc.xml")
+
+        val beanFactory = AutowireCapableBeanFactory()
+        for ((key, value) in xmlBeanDefinitionReader.registry) {
+            beanFactory.registerBeanDefinition(key, value)
+        }
+
+        val helloWorldService = beanFactory.getBean("helloWorldService") as HelloWorldService
         helloWorldService.helloWorld()
     }
 }
